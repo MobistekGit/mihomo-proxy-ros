@@ -161,11 +161,11 @@ then the script **automatically downloads** from the repository and **starts ins
 }
 :if ($currentMinor >= 21) do={
 :put "Current version RouterOS 7.$currentMinor"
-:set r [/tool fetch url=https://raw.githubusercontent.com/Medium1992/mihomo-proxy-ros/refs/heads/main/script21.rsc mode=https output=user as-value]
+:set r [/tool fetch url=https://raw.githubusercontent.com/MobistekGit/mihomo-proxy-ros/refs/heads/main/script21.rsc mode=https output=user as-value]
 }
 :if ($currentMinor = 20) do={
 :put "Current version RouterOS 7.$currentMinor"
-:set r [/tool fetch url=https://raw.githubusercontent.com/Medium1992/mihomo-proxy-ros/refs/heads/main/script.rsc mode=https output=user as-value]
+:set r [/tool fetch url=https://raw.githubusercontent.com/MobistekGit/mihomo-proxy-ros/refs/heads/main/script.rsc mode=https output=user as-value]
 }
 :if ($currentMinor < 20) do={
 :put "Current version RouterOS $currentVersion"
@@ -186,7 +186,7 @@ $s
 ```
 ### Docker compose example
 
-[Docker](https://github.com/Medium1992/mihomo-proxy-ros/blob/main/docker-compose.yml)
+[Docker](https://github.com/MobistekGit/mihomo-proxy-ros/blob/main/docker-compose.yml)
 
 ## 💖 Project Support
 
