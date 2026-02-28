@@ -87,15 +87,15 @@ foreach i in=$slotArray do={
 :set start [/terminal ask]
 }
 
-:do {/interface/veth/add name=MihomoProxyRoS address=192.168.255.2/30 gateway=192.168.255.1
+:do {/interface/veth/add name=MihomoProxyRoS address=10.10.10.2/30 gateway=10.10.10.1
 :put "Create VETH MihomoProxyRoS"} on-error {}
 :do {/interface/list/add name=InAccept include=WAN
 :put "Create interfacelist InAccept"} on-error {}
 :do {/interface/list/member/add interface=MihomoProxyRoS list=InAccept
 :put "Add in interfacelist InAccept interface MihomoProxyRoS"} on-error {}
-:do {/ip/address/add address=192.168.255.1/30 interface=MihomoProxyRoS
+:do {/ip/address/add address=10.10.10.1/30 interface=MihomoProxyRoS
 :put "Add address Mikrotik for interface MihomoProxyRoS"} on-error {}
-:do {/ip/dns/forwarders/add name=MihomoProxyRoS dns-servers=192.168.255.2 verify-doh-cert=no
+:do {/ip/dns/forwarders/add name=MihomoProxyRoS dns-servers=10.10.10.2 verify-doh-cert=no
 :put "Add DNS Forwarders MihomoProxyRoS"} on-error {}
 
 :do {/interface/list/add name=Containers
@@ -150,7 +150,7 @@ add blackhole comment=BlackHole distance=254 dst-address=192.168.0.0/16 gateway=
 }
 :if ([:len [/ip/route/find comment="MihomoProxyRoS0"]] = 0) do={
 /ip route 
-add dst-address=0.0.0.0/0 gateway=192.168.255.2 routing-table=MihomoProxyRoS comment="MihomoProxyRoS0"
+add dst-address=0.0.0.0/0 gateway=10.10.10.2 routing-table=MihomoProxyRoS comment="MihomoProxyRoS0"
 add blackhole comment=BlackHole distance=254 dst-address=10.0.0.0/8 gateway="" routing-table=MihomoProxyRoS
 add blackhole comment=BlackHole distance=254 dst-address=172.16.0.0/12 gateway="" routing-table=MihomoProxyRoS
 add blackhole comment=BlackHole distance=254 dst-address=192.168.0.0/16 gateway="" routing-table=MihomoProxyRoS
@@ -229,7 +229,7 @@ set [find where key=SUB_LINK1 list=MihomoProxyRoS] value=$inputSUBLINK
 }
 
 :if ([:len [/ip/route/find comment="MihomoProxyRoS1"]] = 0) do={
-/ip/route/add dst-address=198.18.0.0/15 gateway=192.168.255.2 comment="MihomoProxyRoS1"
+/ip/route/add dst-address=198.18.0.0/15 gateway=10.10.10.2 comment="MihomoProxyRoS1"
 :put "Add ip route FakeIP"}
 
 /ip/firewall/address-list
@@ -468,13 +468,13 @@ add interval=1d name=update_FWD start-time=06:30:00 comment="MihomoProxyRoS" on-
 }
 
 :if ($dnsproxy=true) do={
-:do {/interface/veth/add name=DNSProxy address=192.168.255.10/30 gateway=192.168.255.9
+:do {/interface/veth/add name=DNSProxy address=10.10.10.10/30 gateway=10.10.10.9
 :put "Create VETH DNSProxy"} on-error {}
 :do {/interface/list/member/add interface=DNSProxy list=InAccept
 :put "Add in interfacelist InAccept interface DNSProxy"} on-error {}
-:do {/ip/address/add address=192.168.255.9/30 interface=DNSProxy
+:do {/ip/address/add address=10.10.10.9/30 interface=DNSProxy
 :put "Add address Mikrotik for interface DNSProxy"} on-error {}
-:do {/ip/dns/forwarders/add name=DNSProxy dns-servers=192.168.255.10 verify-doh-cert=no
+:do {/ip/dns/forwarders/add name=DNSProxy dns-servers=10.10.10.10 verify-doh-cert=no
 :put "Add DNS Forwarders DNSProxy"} on-error {}
 :do {/interface/list/member/add interface=DNSProxy list=Containers
 :put "Add in interfacelist Containers interface DNSProxy"} on-error {}
@@ -499,15 +499,15 @@ add interval=1d name=update_FWD start-time=06:30:00 comment="MihomoProxyRoS" on-
 
 :if ([:len [/system/script/find name="changeDNS"]] = 0) do={
 /system script
-add name=changeDNS source=":if ([:len [/container/find comment=\"DNSProxy\" and running]] > 0 and [/ip/dns/get servers]!=192.168.255.10) d\
+add name=changeDNS source=":if ([:len [/container/find comment=\"DNSProxy\" and running]] > 0 and [/ip/dns/get servers]!=10.10.10.10) d\
 o={\r\
 \n/ip dns set use-doh-server=\"\" verify-doh-cert=no\r\
 \n/ip dns set servers=\"\"\r\
-\n/ip dns set servers=192.168.255.10\r\
+\n/ip dns set servers=10.10.10.10\r\
 \n/ip dns cache flush\r\
 \n:log warning \"change DNS server to DNSProxy\"\r\
 \n} \r\
-\n:if ((([:len [/container/find comment=\"DNSProxy\" and stopped]] > 0) or ([:len [/container/find comment=\"DNSProxy\"]]=0)) and [/ip/dns/get servers]=192.168.255.10) do={\
+\n:if ((([:len [/container/find comment=\"DNSProxy\" and stopped]] > 0) or ([:len [/container/find comment=\"DNSProxy\"]]=0)) and [/ip/dns/get servers]=10.10.10.10) do={\
 \n/ip dns set servers=\"\"\r\
 \n/ip dns set servers=8.8.8.8\r\
 \n/ip dns set use-doh-server=https://dns.google/dns-query verify-doh-cert=yes\r\
@@ -525,14 +525,14 @@ add interval=10s name=DNSchange on-event=changeDNS
 /system/script/environment/remove [find where ]
 :put "Script complete, enjoy!"
 :put "For use WG,AWG pls push conf files on Mikrotik to path /awg_conf/"
-:put "Webpanel UI http://192.168.255.2:9090/ui/"
+:put "Webpanel UI http://10.10.10.2:9090/ui/"
 :put "For donate:"
 :put "- USDT(TRC20):TWDDYD1nk5JnG6FxvEu2fyFqMCY9PcdEsJ"
 :put "- https://boosty.to/petersolomon/donate"
 :put "Invite link Telegram-group https://t.me/+96HVPF3Ww6o3YTNi"
 :log warning "script complete, enjoy!"
 :log warning "For use WG,AWG pls push conf files on Mikrotik to path /awg_conf/"
-:log warning "Webpanel UI http://192.168.255.2:9090/ui/"
+:log warning "Webpanel UI http://10.10.10.2:9090/ui/"
 :log warning "For donate:"
 :log warning "- USDT(TRC20):TWDDYD1nk5JnG6FxvEu2fyFqMCY9PcdEsJ"
 :log warning "- https://boosty.to/petersolomon/donate"
