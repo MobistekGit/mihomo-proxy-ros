@@ -195,8 +195,10 @@ add blackhole comment=BlackHole distance=254 dst-address=192.168.0.0/16 gateway=
 :put "Add env META_GEOSITE value: meta"} on-error {}
 :do { add key=META_GEOIP list=MihomoProxyRoS value=facebook
 :put "Add env META_GEOIP value: facebook"} on-error {}
-:do { add key=META_AS list=MihomoProxyRoS value=AS32934,AS54115
-:put "Add env META_AS value: AS32934,AS54115"} on-error {}
+:do { add key=META_AS list=MihomoProxyRoS value=AS32934,AS54115,AS63293
+:put "Add env META_AS value: AS32934,AS54115,AS63293"} on-error {}
+:do { add key=META_IPCIDR list=MihomoProxyRoS value=41.189.185.0/24,202.59.209.0/24,223.27.200.0/24,223.27.237.0/24
+:put "Add env META_IPCIDR value: 41.189.185.0/24,202.59.209.0/24,223.27.200.0/24,223.27.237.0/24"} on-error {}
 :do { add key=ROBLOX_GEOSITE list=MihomoProxyRoS value=roblox
 :put "Add env ROBLOX_GEOSITE value: roblox"} on-error {}
 :do { add key=ROBLOX_AS list=MihomoProxyRoS value=AS22697,AS11281,AS136766
@@ -246,7 +248,7 @@ add address=8.8.4.4 list=DNS
 
 /ip firewall mangle
 :if ([:len [find comment="YT_MSS"]] = 0) do={add action=change-mss chain=forward dst-address-list=YT in-interface=MihomoProxyRoS new-mss=88 protocol=tcp tcp-flags=syn connection-state=new comment="YT_MSS"; :put "Add mangle rules YT_MSS"}
-:if ([:len [find comment="Accept_no_mark"]] = 0) do={add action=accept chain=prerouting connection-mark=no-mark connection-state=established,related,untracked comment="Accept_no_mark"; :put "Add mangle rules 1"}
+:if ([:len [find comment="Accept_no_mark"]] = 0) do={add action=accept chain=prerouting connection-mark=no-mark connection-state=established comment="Accept_no_mark"; :put "Add mangle rules 1"}
 :if ([:len [find comment="AcceptInWAN&Containers"]] = 0) do={add action=accept chain=prerouting in-interface-list=InAccept comment="AcceptInWAN&Containers"; :put "Add mangle rules 2"}
 :if ([:len [find comment="RoutingToMihomo2"]] = 0) do={add action=mark-routing chain=prerouting in-interface-list=LAN connection-mark=MihomoProxyRoS new-routing-mark=MihomoProxyRoS passthrough=no comment="RoutingToMihomo2"; :put "Add mangle rules 3"}
 :if ([:len [find comment="MarkConnAddressList"]] = 0) do={add action=mark-connection chain=prerouting in-interface-list=LAN connection-mark=no-mark connection-state=new dst-address-list=MihomoProxyRoS new-connection-mark=MihomoProxyRoS comment="MarkConnAddressList"; :put "Add mangle rules 4"}
@@ -268,6 +270,7 @@ add address=8.8.4.4 list=DNS
 :do {add list=MihomoProxyRoS comment=YT address=www.youtube.com} on-error {}
 :do {add list=MihomoProxyRoS comment=NTCParty address=ntc.party} on-error {}
 :do {add list=MihomoProxyRoS comment=TelegramFromAS31500 address=109.239.140.0/24} on-error {}
+:do {add list=MihomoProxyRoS comment=FacebookFromAS9825 address=202.59.209.0/24} on-error {}
 
 :if ([:len [/system/script/find name="IP_MihomoProxyRoS"]] = 0) do={
 /system script
@@ -292,6 +295,8 @@ add name=IP_MihomoProxyRoS source="# Define global variables\r\
 \n\"geoipv4/facebook\";\r\
 \n\"asnv4/AS32934\";\r\
 \n\"asnv4/AS54115\";\r\
+\n\"asnv4/AS63293\";\r\
+\n\"asnv4/AS45796\";\r\
 \n# NetFlix\r\
 \n\"geoipv4/netflix\";\r\
 \n\"asnv4/AS2906\";\r\
