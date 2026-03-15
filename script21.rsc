@@ -373,15 +373,13 @@ add name=FWD_update source="# Define global variables\r\
 \n\"x\";\r\
 \n\"kinopub\";\r\
 \n\"xhamster\";\r\
-\n\"porn\";\r\
 \n\"video\";\r\
 \n\"claude\";\r\
 \n\"xai\";\r\
 \n\"notion\";\r\
 \n\"supercell\";\r\
 \n\"xbox\";\r\
-\n\"roblox\";\r\
-\n\"pornhub\"\r\
+\n\"roblox\"\r\
 \n}\r\
 \n\r\
 \n# Base URL for RSC files\r\
