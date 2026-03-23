@@ -6,22 +6,22 @@ ARG AMD64VERSION
 RUN apk add --no-cache curl jq gzip tar unzip
 RUN mkdir -p /final
 
-RUN curl -s https://api.github.com/repos/medium1992/mihomo-proxy-ros/releases/latest | \
+RUN curl -s https://api.github.com/repos/medium1992/mihomo-proxy-ros/releases/AMD64v2 | \
     jq -r '.assets[].browser_download_url' | grep -E 'mihomo-linux-(amd64|arm64|armv7|armv5)' | \
     while read url; do curl -L "$url" -o "$(basename "$url")"; done
 
-RUN curl -s https://api.github.com/repos/heiher/hev-socks5-tunnel/releases/latest | \
+RUN curl -s https://api.github.com/repos/heiher/hev-socks5-tunnel/releases/AMD64v2 | \
     jq -r '.assets[].browser_download_url' | grep -E 'arm32|arm32v7|arm64|x86_64' | \
     while read url; do curl -L "$url" -o "$(basename "$url")"; done
 
-RUN curl -s https://api.github.com/repos/hufrea/byedpi/releases/latest | \
+RUN curl -s https://api.github.com/repos/hufrea/byedpi/releases/AMD64v2 | \
     jq -r '.assets[].browser_download_url' | grep -E 'armv6|armv7l|aarch64|x86_64' | \
     while read url; do curl -L "$url" -o "$(basename "$url")"; done
 
 RUN for f in *.tar.gz; do tar -xzf "$f"; done
 RUN for f in *.gz; do gunzip "$f"; done
 
-RUN curl -s https://api.github.com/repos/bol-van/zapret/releases/latest | \
+RUN curl -s https://api.github.com/repos/bol-van/zapret/releases/AMD64v2 | \
     jq -r '.tag_name as $tag | .assets[].browser_download_url | select(endswith(".tar.gz") and (contains("openwrt-embedded") | not))' | \
     head -1 | \
     xargs -I {} curl -L {} -o zapret.tar.gz && \
@@ -29,7 +29,7 @@ RUN curl -s https://api.github.com/repos/bol-van/zapret/releases/latest | \
     tar -xzf zapret.tar.gz -C /zapret --strip-components=1 && \
     rm zapret.tar.gz
 
-RUN curl -s https://api.github.com/repos/bol-van/zapret2/releases/latest | \
+RUN curl -s https://api.github.com/repos/bol-van/zapret2/releases/AMD64v2 | \
     jq -r '.tag_name as $tag | .assets[].browser_download_url | select(endswith(".tar.gz") and (contains("openwrt-embedded") | not))' | \
     head -1 | \
     xargs -I {} curl -L {} -o zapret2.tar.gz && \
@@ -37,7 +37,7 @@ RUN curl -s https://api.github.com/repos/bol-van/zapret2/releases/latest | \
     tar -xzf zapret2.tar.gz -C /zapret2 --strip-components=1 && \
     rm zapret2.tar.gz
 
-RUN curl -s https://api.github.com/repos/Flowseal/zapret-discord-youtube/releases/latest | \
+RUN curl -s https://api.github.com/repos/Flowseal/zapret-discord-youtube/releases/AMD64v2 | \
     jq -r '.assets[].browser_download_url | select(endswith(".zip"))' | \
     head -1 | \
     xargs -I {} curl -L {} -o zapret-discord-youtube.zip && \
